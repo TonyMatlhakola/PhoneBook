@@ -29,6 +29,7 @@ const AddContactModal = () => {
       .then((response) => {
         ResfreshPage();
         console.log(response);
+        alert("You have successfully added: "+ contactName);
 
       })
       .catch((error) => {
@@ -51,6 +52,7 @@ const AddContactModal = () => {
             name="name"
             defaultValue=""
             onChange={(e) => setName(e.target.value)}
+            required
           />
           <h5>Phone Number</h5>
           <input
@@ -58,6 +60,7 @@ const AddContactModal = () => {
             name="phoneNumber"
             defaultValue=""
             onChange={(e) => setPhoneNumber(e.target.value)}
+            required
           />
         </div>
         <br />
