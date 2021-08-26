@@ -8,7 +8,7 @@ namespace PhoneBook.Repository
 {
     public interface IRepository
     {
-        bool AddEntryToPhoneBook(string name, string phoneNumber);
+        bool AddEntryToPhoneBook(PhoneBookEntry pohBookEntry);
         List<PhoneBookModel> GetPhoneBook();
     }
 }

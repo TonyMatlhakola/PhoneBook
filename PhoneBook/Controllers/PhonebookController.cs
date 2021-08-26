@@ -41,7 +41,7 @@ namespace PhoneBook.Controllers
         [HttpPost]
         public IActionResult AddEntryToPhoneBook(PhoneBookEntry phoneBookEntry)
         {
-            var isEntryAdded = _repository.AddEntryToPhoneBook(phoneBookEntry.Name, phoneBookEntry.PhoneNumber);
+            var isEntryAdded = _repository.AddEntryToPhoneBook(phoneBookEntry);
 
             if (isEntryAdded) return Ok();
 

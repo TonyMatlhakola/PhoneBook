@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using PhoneBook.Data;
 using PhoneBook.Data.Models;
-using PhoneBook.Data.Options;
 
 namespace PhoneBook.Repository
 {
@@ -16,11 +13,10 @@ namespace PhoneBook.Repository
         #region Constructor
 
         public Repository(ILogger<Repository> logger,
-            IOptions<PhoneBookOptions> options, PhoneBookContext phoneBookContext)
+            PhoneBookContext phoneBookContext)
         {
             _logger = logger;
-           _options = options;
-           _phoneBookContext = phoneBookContext;
+            _phoneBookContext = phoneBookContext;
         }
 
         #endregion
@@ -29,7 +25,6 @@ namespace PhoneBook.Repository
 
 
         private readonly ILogger<Repository> _logger;
-        private readonly IOptions<PhoneBookOptions> _options;
         private readonly PhoneBookContext _phoneBookContext;
 
         #endregion
@@ -37,23 +32,27 @@ namespace PhoneBook.Repository
 
         #region Methods
 
-        public bool AddEntryToPhoneBook(string name, string phoneNumber)
+        public bool AddEntryToPhoneBook(PhoneBookEntry phoneBookEntry)
         {
             try
             {
-                if (!string.IsNullOrWhiteSpace(phoneNumber))
+                if (!string.IsNullOrWhiteSpace(phoneBookEntry.PhoneNumber))
                 {
                     var phoneBook = _phoneBookContext.Phonebook.Find(1); //Assuming only one Phonebook exists
-                    _phoneBookContext.PhonebookEntry.Add(new PhoneBookEntry
+                 var r=   _phoneBookContext.PhonebookEntry.Add(new PhoneBookEntry
                     {
-                                Name = name,
-                                PhoneNumber = phoneNumber,
+                                Name = phoneBookEntry.Name,
+                                PhoneNumber = phoneBookEntry.PhoneNumber,
                                 PhoneBook = phoneBook
                     });
+                 if (r.Entity.PhoneNumber == phoneBookEntry.PhoneNumber)
+                 {
+                     return true;
+                 }
                 }
 
                 _phoneBookContext.SaveChanges();
-                _logger.LogError($"{nameof(AddEntryToPhoneBook)}: New Phonebook and Entry has been added..");
+                _logger.LogError($"{nameof(AddEntryToPhoneBook)}: New Entry has been added..");
             }
 
             catch (Exception ex)
@@ -62,7 +61,7 @@ namespace PhoneBook.Repository
                 return false;
             }
 
-            return true;
+            return false;
 
         }
 
